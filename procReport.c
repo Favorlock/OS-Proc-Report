@@ -8,8 +8,7 @@
 
 #define procfs_name "proc_report"
 
-static unsigned long virt2phys(struct mm_struct *mm, unsigned long vpage)
-{
+static unsigned long virt2phys(struct mm_struct *mm, unsigned long vpage) {
   pgd_t *pgd;
   p4d_t *p4d;
   pud_t *pud;
@@ -74,8 +73,7 @@ static int proc_report(struct seq_file *m) {
   seq_printf(m, "proc_id,proc_name,contig_pages,noncontig_pages,total_pages\n");
   printk(KERN_INFO "proc_id,proc_name,contig_pages,noncontig_pages,total_pages\n");
 
-  for_each_process(task)
-  {
+  for_each_process(task) {
     if (task->pid <= 650) {
       continue;
     }
@@ -118,13 +116,11 @@ static int proc_report(struct seq_file *m) {
   return 0;
 }
 
-static int proc_show(struct seq_file *m, void *v)
-{
+static int proc_show(struct seq_file *m, void *v) {
   return proc_report(m);
 }
 
-static int proc_open(struct inode *inode, struct file *file)
-{
+static int proc_open(struct inode *inode, struct file *file) {
   return single_open(file, proc_show, NULL);
 }
 
@@ -136,8 +132,7 @@ static const struct file_operations proc_file_fops = {
   .release = single_release,
 };
 
-static int __init init_callback (void)
-{
+static int __init init_callback (void) {
   struct proc_dir_entry *proc_file_entry = proc_create(procfs_name, 0, NULL, &proc_file_fops);
 
   if (proc_file_entry == NULL) {
@@ -149,8 +144,7 @@ static int __init init_callback (void)
   return 0;
 }
 
-static void __exit cleanup_callback(void)
-{
+static void __exit cleanup_callback(void) {
   remove_proc_entry(procfs_name, NULL);
   printk(KERN_INFO "/proc/%s removed\n", procfs_name);
   printk(KERN_INFO "procReport: performing cleanup of module\n");
