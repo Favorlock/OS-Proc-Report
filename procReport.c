@@ -7,8 +7,7 @@
 
 #define procfs_name "proc_report"
 
-static int proc_show(struct seq_file *m, void *v)
-{
+static int proc_report(struct seq_file *m) {
   struct task_struct *task;
 
   seq_printf(m, "PROCESS REPORT:\n");
@@ -25,12 +24,17 @@ static int proc_show(struct seq_file *m, void *v)
   return 0;
 }
 
+static int proc_show(struct seq_file *m, void *v)
+{
+  return proc_report(m);
+}
+
 static int proc_open(struct inode *inode, struct file *file)
 {
   return single_open(file, proc_show, NULL);
 }
 
-static const struct file_operations proc_fops = {
+static const struct file_operations proc_file_fops = {
   .owner = THIS_MODULE,
   .open = proc_open,
   .read = seq_read,
@@ -38,9 +42,9 @@ static const struct file_operations proc_fops = {
   .release = single_release,
 };
 
-static int __init proc_init (void)
+static int __init module_init (void)
 {
-  struct proc_dir_entry *proc_file_entry = proc_create(procfs_name, 0, NULL, &proc_fops);
+  struct proc_dir_entry *proc_file_entry = proc_create(procfs_name, 0, NULL, &proc_file_fops);
 
   if (proc_file_entry == NULL)
     return -ENOMEM;
@@ -50,7 +54,7 @@ static int __init proc_init (void)
   return 0;
 }
 
-static void __exit proc_cleanup(void)
+static void __exit module_cleanup(void)
 {
   remove_proc_entry(procfs_name, NULL);
   printk(KERN_INFO "/proc/%s removed\n", procfs_name);
@@ -61,5 +65,5 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Evan Lindsay");
 MODULE_DESCRIPTION("TCSS 422 - Fall 2018 - Assignment 3");
 MODULE_VERSION("0.01");
-module_init(proc_init);
-module_exit(proc_cleanup);
+module_init(module_init);
+module_exit(module_cleanup);
