@@ -33,6 +33,8 @@ test:
 	sudo dmesg -C
 	# Install the module
 	sudo insmod procReport.ko
+	# Test the module
+	sudo cat /proc/proc_report
 	# Remove the module
 	sudo rmmod procReport.ko
 	# Print messages

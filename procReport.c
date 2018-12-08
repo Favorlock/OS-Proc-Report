@@ -3,12 +3,26 @@
 #include<linux/module.h>
 #include<linux/proc_fs.h>
 #include<linux/seq_file.h>
+#include<linux/sched.h>
+#include<linux/sched/signal.h>
 
 #define procfs_name "proc_report"
 
 static int proc_show(struct seq_file *m, void *v)
 {
+  struct task_struct *task;
+
   seq_printf(m, "PROCESS REPORT:\n");
+  seq_printf(m, "proc_id,proc_name\n");
+
+  for_each_process(task)
+  {
+    if (task->pid <= 650)
+      continue;
+
+    seq_printf(m, "%d,%s\n", task->pid, task->comm);
+  }
+
   return 0;
 }
 
