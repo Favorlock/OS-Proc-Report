@@ -56,6 +56,8 @@ static void process_task(struct seq_file *m, struct task_struct *task)
 {
   struct vm_area_struct *vma = 0;
   unsigned long vpage;
+  unsigned long physical_page_addr;
+  unsigned long next_physical_page_addr;
   unsigned long contigPages = 0;
   unsigned long nonContigPages = 0;
   unsigned long totalPages = 0;
@@ -63,9 +65,17 @@ static void process_task(struct seq_file *m, struct task_struct *task)
   if (task->mm && task->mm->mmap) {
     for (vma = task->mm->mmap; vma; vma = vma->vm_next) {
       for (vpage = vma->vm_start; vpage < vma->vm_end; vpage += PAGE_SIZE) {
-        unsigned long physical_page_addr = virt2phys(task->mm, vpage);
+        physical_page_addr = virt2phys(task->mm, vpage);
+
         if (physical_page_addr == 0) {
           continue;
+        }
+
+        next_physical_page_addr = virt2phys(task->mm, vpage + PAGE_SIZE);
+        if (next_physical_page_addr == physical_page_addr + PAGE_SIZE) {
+          ++contigPages;
+        } else {
+          ++nonContigPages;
         }
 
         ++totalPages;
