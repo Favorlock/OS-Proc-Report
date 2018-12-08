@@ -70,7 +70,9 @@ static int proc_report(struct seq_file *m) {
   unsigned long cumulativeTotalPages = 0;
 
   seq_printf(m, "PROCESS REPORT:\n");
+  printk(KERN_INFO "PROCESS REPORT:\n");
   seq_printf(m, "proc_id,proc_name,contig_pages,noncontig_pages,total_pages\n");
+  printk(KERN_INFO "proc_id,proc_name,contig_pages,noncontig_pages,total_pages\n");
 
   for_each_process(task)
   {
@@ -107,9 +109,11 @@ static int proc_report(struct seq_file *m) {
     }
 
     seq_printf(m, "%d,%s,%lu,%lu,%lu\n", task->pid, task->comm, contigPages, nonContigPages, totalPages);
+    printk(KERN_INFO "%d,%s,%lu,%lu,%lu\n", task->pid, task->comm, contigPages, nonContigPages, totalPages);
   }
 
   seq_printf(m, "TOTALS,,%lu,%lu,%lu\n", cumulativeContigPages, cumulativeNonContigPages, cumulativeTotalPages);
+  printk(KERN_INFO "TOTALS,,%lu,%lu,%lu\n", cumulativeContigPages, cumulativeNonContigPages, cumulativeTotalPages);
 
   return 0;
 }
