@@ -9,6 +9,7 @@ all:
 
 clean:
 	sudo $(MAKE) -C $(KDIR) M=$(shell pwd) clean
+	-sudo rm -f *.o.*
 
 insmod:
 	# Clear messages
