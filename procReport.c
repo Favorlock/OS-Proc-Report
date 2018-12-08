@@ -17,7 +17,7 @@ static int proc_open(struct inode *inode, struct file *file)
   return single_open(file, proc_show, NULL);
 }
 
-static const struct file_operations Our_Proc_File = {
+static const struct file_operations proc_fops = {
   .owner = THIS_MODULE,
   .open = proc_open,
   .read = seq_read,
@@ -27,7 +27,7 @@ static const struct file_operations Our_Proc_File = {
 
 static int __init proc_init (void)
 {
-  proc_create(procfs_name, 0, NULL, &Our_Proc_File);
+  proc_create(procfs_name, 0, NULL, &proc_fops);
   printk(KERN_INFO "/proc/%s created\n", procfs_name);
   printk(KERN_INFO "procReport: kernel module initialized\n");
   return 0;
