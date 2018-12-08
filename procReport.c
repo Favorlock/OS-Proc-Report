@@ -42,7 +42,7 @@ static const struct file_operations proc_file_fops = {
   .release = single_release,
 };
 
-static int __init module_init (void)
+static int __init init_callback (void)
 {
   struct proc_dir_entry *proc_file_entry = proc_create(procfs_name, 0, NULL, &proc_file_fops);
 
@@ -54,7 +54,7 @@ static int __init module_init (void)
   return 0;
 }
 
-static void __exit module_cleanup(void)
+static void __exit cleanup_callback(void)
 {
   remove_proc_entry(procfs_name, NULL);
   printk(KERN_INFO "/proc/%s removed\n", procfs_name);
@@ -65,5 +65,5 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Evan Lindsay");
 MODULE_DESCRIPTION("TCSS 422 - Fall 2018 - Assignment 3");
 MODULE_VERSION("0.01");
-module_init(module_init);
-module_exit(module_cleanup);
+module_init(init_callback);
+module_exit(cleanup_callback);
