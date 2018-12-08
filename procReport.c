@@ -27,7 +27,11 @@ static const struct file_operations proc_fops = {
 
 static int __init proc_init (void)
 {
-  proc_create(procfs_name, 0, NULL, &proc_fops);
+  struct proc_dir_entry *proc_file_entry = proc_create(procfs_name, 0, NULL, &proc_fops);
+
+  if (proc_file_entry == NULL)
+    return -ENOMEM;
+
   printk(KERN_INFO "/proc/%s created\n", procfs_name);
   printk(KERN_INFO "procReport: kernel module initialized\n");
   return 0;
